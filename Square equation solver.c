@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#define MIN_DIFFERENCE 1e-4
 
 //Cтруктура, хранящая уравнение
 //Формат уравнения a*x² + b*x + c
@@ -100,7 +101,7 @@ void calculateSolution(Equation* equation, Solution* solution)
 	solution->x1 = (-equation->b - discriminantRoot) / (2.0 * equation->a);
 	solution->x2 = (-equation->b + discriminantRoot) / (2.0 * equation->a);
 
-	if (fabs(solution->x1 - solution->x2) < 1e-4)
+	if (fabs(solution->x1 - solution->x2) < MIN_DIFFERENCE)
 		solution->isZeroDiscriminant = 0; //Равные корни
 }
 
