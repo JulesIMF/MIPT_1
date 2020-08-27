@@ -25,9 +25,9 @@ enum SolutionType getSolution(double a, double b, double c,
                               double* x1, double* x2)
 {
 #ifdef    JULESIMF_DEBUG
-    assert(a == a);
-    assert(b == b);
-    assert(c == c);
+    assert(!isnan(a));
+    assert(!isnan(b));
+    assert(!isnan(c));
     assert(x1 != x2);
     assert(x1 != NULL);
     assert(x2 != NULL);
@@ -80,7 +80,7 @@ int main()
     a = b = c = 0.0;
 
     double x1, x2; //Корни уравнения
-    x1 = x2 = 0;
+    x1 = x2 = 0.0;
 
 
     //Считываем коэффициенты, пока они не будут введены корректно
