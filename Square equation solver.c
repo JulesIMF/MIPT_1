@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <assert.h>
 
 #define MIN_DIFFERENCE          1e-4
 #define EXIT_UNKNOWN_EXCEPTION  1
