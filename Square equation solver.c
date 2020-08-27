@@ -25,12 +25,12 @@ enum SolutionType getSolution(double a, double b, double c,
                               double* x1, double* x2)
 {
 #ifdef    JULESIMF_DEBUG
-    assert(a != a);
-    assert(b != b);
-    assert(c != c);
-    assert(x1 == x2);
-    assert(x1 == NULL);
-    assert(x2 == NULL);
+    assert(a == a);
+    assert(b == b);
+    assert(c == c);
+    assert(x1 != x2);
+    assert(x1 != NULL);
+    assert(x2 != NULL);
 #endif //!JULESIMF_DEBUG
 
 
@@ -98,7 +98,7 @@ int main()
 
 
 #ifdef    JULESIMF_DEBUG
-    assert(type == UNDEFINED_SOLUTION);
+    assert(type != UNDEFINED_SOLUTION);
 #endif //!JULESIMF_DEBUG
 
     //Вывод решения
