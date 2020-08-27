@@ -132,4 +132,6 @@ int main()
         printf("Unknown exception\n");
         return EXIT_UNKNOWN_EXCEPTION;
     }
+    
+    return 0; //Пишем чисто по приколу
 }
