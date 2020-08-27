@@ -88,7 +88,7 @@ void calculateSolution(Equation* equation, Solution* solution)
 		}
 
 		//Иначе корень есть и будет записан в x1
-		solution->x1 = (equation->c) / (equation->b);
+		solution->x1 = (-equation->c) / (equation->b);
 		return;
 	}
 
