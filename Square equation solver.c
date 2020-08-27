@@ -60,6 +60,13 @@ void scanEquation(Equation* equation)
 }
 
 
+double getDiscriminant(Equation* equation)
+{
+	return (equation->b) * (equation->b)
+	        - 4 * (equation->a) * (equation->c);
+}
+
+
 //Эта функция решает уравнение equation и записывает решение в solution
 void calculateSolution(Equation* equation, Solution* solution)
 {
@@ -86,8 +93,7 @@ void calculateSolution(Equation* equation, Solution* solution)
 	}
 
 	//Если а != 0, это квадратное уравнение	
-	double discriminant = (equation->b) * (equation->b)
-		                  - 4 * (equation->a) * (equation->c);
+	double discriminant = getDiscriminant(equation);
 
 	//Если дискриминант отрицательный, решений нет
 	if (discriminant < 0.0)
