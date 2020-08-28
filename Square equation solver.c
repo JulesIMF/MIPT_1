@@ -224,4 +224,5 @@ void CHECKER_getSolution(char const* testsFile)
         assert(isZero(x2 - _x2));
     }
     printf("....CHECKER_getSolution exited\n\n\n\n");
+    fclose(tests);
 }
