@@ -29,15 +29,15 @@ enum SolutionType {
 /**
  *  \brief Функция для решения квадратного уравнения
  *
- *  \param a старший коэффициент
- *  \param b средний коэффициент
- *  \param c свободный коэффициент
+ *  \param a  старший коэффициент
+ *  \param b  средний коэффициент
+ *  \param c  свободный коэффициент
  *  \param x1 указатель на первый корень
  *  \param x2 указатель на второй корень
- *  \return тип решения для данного уравнения
+ *  \return   тип решения для данного уравнения
  */
 enum SolutionType getSolution(double a, double b, double c,
-    double* x1, double* x2);
+                              double* x1, double* x2);
 
 /**
  * \brief Точка входа в программу.
@@ -47,8 +47,8 @@ enum SolutionType getSolution(double a, double b, double c,
 int main()
 {
     printf("Square equation solver\n"
-        "JulesIMF\n"
-        "Equation format is a*(x^2) + b*x + c\n\n");
+           "JulesIMF\n"
+           "Equation format is a*(x^2) + b*x + c\n\n");
 
     double a = 0.0, b = 0.0, c = 0.0; //Коэффициенты уравнения
 
@@ -111,7 +111,7 @@ int main()
 }
 
 enum SolutionType getSolution(double a, double b, double c,
-    double* x1, double* x2)
+                  double* x1, double* x2)
 {
 #ifdef    JULESIMF_DEBUG
     assert(!isnan(a));
