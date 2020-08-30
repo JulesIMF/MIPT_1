@@ -122,7 +122,7 @@ int main()
 #endif //!JULESIMF_DEBUG
 
 
-	printf("Enter input file name: ");
+	printf("Enter output file name: ");
 	fgets(fileName, LENGTH_fileName - 2, stdin);
 
 	deleteNewLine(fileName, LENGTH_fileName);
