@@ -18,6 +18,7 @@
  * \return Количество единиц в двоичном представлении n
  */
 int intPopcount(int n) { int count = 0; while (n) { count += n & 1; n >>= 1; } return count; }
+//В одну строчку реализация, потому что реально простая функция
 
 /**
  * \breif Заменяет первый встетившийся '\n' на '\0', если таковой имеется.
@@ -35,7 +36,8 @@ void deleteNewLine(char* string, int const size);
  * \param size Размер массивов
  * \param file Файл, из которого считывается строка
  * \param stringLength Максимальная длина строки
- * \return 0 в случае успешного добавления, -1 в случае отказа realloc или malloc, -2 в случае отсутствия новой строки
+ * \return 0 в случае успешного добавления, -1 в случае отказа 
+             realloc или malloc, -2 в случае отсутствия новой строки
  */
 int addNewString(char*** strings, int size, FILE* file, int const stringLength);
 
@@ -51,7 +53,8 @@ int stringComparator(void const* px, void const* py);
 /**
  * \brief Точка входа в программу.
  *
- * \return 0 в случае успешного выполнения программы. Для других кодов смотрите документацию.
+ * \return 0 в случае успешного выполнения программы. 
+             Для других кодов смотрите документацию.
  */
 
 
@@ -169,7 +172,8 @@ int addNewString(char*** strings, int size, FILE* file, int const stringLength)
 			size = 1;
 		else
 			size <<= 1;
-		char** newStrings = (char**)realloc((void*)(*strings), sizeof(char**) * size);
+		char** newStrings = (char**)
+		       realloc((void*)(*strings), sizeof(char**) * size);
 
 		if (newStrings)
 			*strings = newStrings;
