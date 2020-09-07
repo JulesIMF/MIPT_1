@@ -57,7 +57,8 @@ void* translateFileIntoRam(FILE* file, int* pFileSize, int* nStrings);
  * \warning source не перекопируется!!
  * \return 0 в случае успешного выполнения, 1 если переданы противоречивые аргументы, 2 если есть строка длиннее 100
  */
-int separateStrings(void* source, int fileSize, char** destination, int nStrings, int const LENGTH_string);
+int separateStrings(void* source, int fileSize, char** destination, 
+		    int nStrings, int const LENGTH_string);
 
 
 /**
