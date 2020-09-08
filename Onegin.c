@@ -180,7 +180,7 @@ int main(int argc, char const** argv)
 	assert(originalStrings);
 #endif //!JULESIMF_DEBUG
 
-	memcpy(originalStrings, strings, nStrings*sizeof(char*));
+	memcpy(originalStrings, strings, nStrings * sizeof(char*));
 
 
 	if (RETURN_readStrings == 1)
