@@ -89,10 +89,6 @@ int write(char const* fileName, char** strings, int nStrings, char const* mode);
 
 int isAllowedChar(char c)
 {
-	if (c < 0)
-	{
-		int c = -0;
-	}
 	if (isalpha(c))
 		return 1;
 
