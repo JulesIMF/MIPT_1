@@ -6,14 +6,15 @@ Name:
 Abstract:
 	Сортирует строки входного файла и выводит в другой файл
 Author:
-	JulesIMF
-Revision History:
-	
+	JulesIMF	
 Last Edit:
-	07.09.2020 19:18
+	08.09.2020 19:59
+Edit Notes:
+	1) Убраны ненужные отладочные модули и устаревшие строки кода
+	2) Добавлены reverseStringComparator, write	
 */
 
-//#define JULESIMF_DEBUG
+#define JULESIMF_DEBUG
 //#define JULESIMF_NO_OUTPUT
 
 ///Из-за специфики VS необходимо объявить следующий макрос
@@ -27,7 +28,7 @@ Last Edit:
 
 
 /**
- * Компаратор для строк.
+ * Прямой компаратор для строк.
  *
  * \param pFirst Указатель на первый элемент
  * \param pSecond Указатель на второй элемент
@@ -37,12 +38,22 @@ int stringComparator(void const* pFirst, void const* pSecond);
 
 
 /**
+ * Прямой компаратор для строк.
+ *
+ * \param pFirst Указатель на первый элемент
+ * \param pSecond Указатель на второй элемент
+ * \return 0 в случае равенства строк, иначе разницу между первыми отличающимися символами
+ */
+int reverseStringComparator(void const* pFirst, void const* pSecond);
+
+
+/**
  * \brief Загружает файл в RAM и вставляет '\0' после него, при этом после '\0' есть еще один доступный байт.
  * 
  * \param file загружаемый файл
  * \param fileSize указатель на переменную, в которую будет записан размер файла
  * \param nStrings указатель на переменную, в которую будет записано количество строк
- * \return указатель на область памяти, в которую загружен файл, NULL в случае ошибки
+ * \return указатель на область памяти, в которую загружен файл, 0 в случае ошибки
  */
 void* translateFileIntoRam(FILE* file, int* pFileSize, int* nStrings);
 
@@ -55,10 +66,28 @@ void* translateFileIntoRam(FILE* file, int* pFileSize, int* nStrings);
  * \param nStrings количество строк
  * \param LENGTH_string максимальная длина строки
  * \warning source не перекопируется!!
+ * \warning массив *stringsLengths перевыделяется!!
  * \return 0 в случае успешного выполнения, 1 если переданы противоречивые аргументы, 2 если есть строка длиннее 100
  */
 int separateStrings(void* source, int fileSize, char** destination, 
-		    int nStrings, int const LENGTH_string);
+                    int nStrings, int const LENGTH_string);
+
+/**
+ * \brief Выводит массив строк в файл.
+ * \param fileName строка с именем файла
+ * \param strings массив строк
+ * \param nStrings кличество строк в массиве
+ * \param mode режим открытия файла
+ */
+int write(char const* fileName, char** strings, int nStrings, char const* mode);
+
+
+
+//*************************************************************************************************	
+//*************************************************************************************************	
+//******************************************MAIN
+//*************************************************************************************************
+//*************************************************************************************************	
 
 
 /**
@@ -71,23 +100,11 @@ int separateStrings(void* source, int fileSize, char** destination,
  */
 int main(int argc, char const** argv)
 {
-	
 #ifdef    JULESIMF_DEBUG
-	printf(".....%d parametrs:\n", argc);
-	for (int i = 0; i != argc; i++)
-		printf("%s\n", argv[i]);
-
-	printf(".....PARAMETRS ENDED\n\n");
-
-	
-	/*
+	//Для извращенского дебага все можно
 	argc = 3;
-	
-	argv[0] = "";
 	argv[1] = "Tests.txt";
 	argv[2] = "out.txt";
-	//Так то это работает и для дебага подходит, но уже не нужно
-	*/
 
 #endif //!JULESIMF_DEBUG
 	if (argc && !argv)
@@ -102,7 +119,10 @@ int main(int argc, char const** argv)
 		return 0;
 	}
 	const int LENGTH_string = 100;
-	
+
+//*************************************************************************************************	
+//******************************************ЧТЕНИЕ ДАННЫХ
+//*************************************************************************************************
 
 	//Файл с данными
 	FILE* poem = fopen(argv[1], "r");
@@ -119,18 +139,23 @@ int main(int argc, char const** argv)
 	}
 
 	//Получим размер файла и транслируем его в память
-	int fileSize = 0;
-	int nStrings = 0;
+	int fileSize = 0; //Размер файла запишется сюда
+	int nStrings = 0; //Количество строк запишется сюда
+
+//*************************************************************************************************	
+//******************************************ТРАНСЛЯЦИЯ ДАННЫХ
+//*************************************************************************************************
 
 #ifndef   JULESIMF_NO_OUTPUT
 	printf("Translating file into RAM...\n");
 #endif //!JULESIMF_NO_OUTPUT
-	void* translatedFile = translateFileIntoRam(poem, &fileSize, &nStrings);
 
+	void* translatedFile = translateFileIntoRam(poem, &fileSize, &nStrings);
 
 #ifndef   JULESIMF_NO_OUTPUT
 	printf("Input file closed\n");
 #endif //!JULESIMF_NO_OUTPUT
+
 	fclose(poem);
 
 	if (!translatedFile)
@@ -139,13 +164,6 @@ int main(int argc, char const** argv)
 		return 0;
 	}
 
-	/*int nNewLineSymbols = 0;
-	for (int i = 1; i != fileSize; i++)
-	{
-		if (translatedFile[i] == '\n' && )
-			nNewLineSymbols++;
-	}*/
-
 	char** strings = (char**)calloc(nStrings, sizeof(char*)); //А здесь сам массив
 	if (!strings)
 	{
@@ -153,83 +171,117 @@ int main(int argc, char const** argv)
 		return 0;
 	}
 
+//*************************************************************************************************	
+//******************************************РАЗДЕЛЕНИЕ НА СТРОКИ
+//*************************************************************************************************
+
 #ifndef   JULESIMF_NO_OUTPUT
 	printf("Separating strings...\n");
 #endif //!JULESIMF_NO_OUTPUT
+	
+
 	int RETURN_readStrings = separateStrings(translatedFile, fileSize, strings, 
 	                                         nStrings, LENGTH_string);
 
-	assert(strings[0]);
 
 	if (RETURN_readStrings == 1)
 	{
 		printf("Error occured while separating file into strings\n");
 		return 0;
 	}
-
-	//if (RETURN_readStrings == 2)
-	//{
-	//	printf("A line containing at least %d symbols was found"
-	//		   " - maximal length is %d\n", LENGTH_string, LENGTH_string - 1);
-	//	return 0;
-	//}
 	
-
-#ifdef    JULESIMF_DEBUG
-	printf("\n\n.....Testing the correctness of input\n");
-	assert(strings != NULL);
-	for (int i = 0; i != nStrings; i++)
-	{
-		printf("%s\n", strings[i]);
-	}
-	printf(".....Test ended\n\n");
-#endif //!JULESIMF_DEBUG
-
+//*************************************************************************************************	
+//******************************************СОРТИРОВКА СТРОК В ПРЯМОМ ПОРЯДКЕ
+//*************************************************************************************************
 
 #ifndef   JULESIMF_NO_OUTPUT
-	printf("Sorting the poem...\n");
+	printf("Sorting the poem in direct...\n");
 #endif //!JULESIMF_NO_OUTPUT
 
 	qsort((void*)strings, nStrings, sizeof(char*), stringComparator);
 
-#ifdef    JULESIMF_DEBUG
-	printf("\n\n.....Testing the correctness of sort\n");
-	assert(strings != NULL);
-	for (int i = 0; i != nStrings; i++)
+	if (write(argv[2], strings, nStrings, "w"))
 	{
-		printf("%s\n", strings[i]);
+		printf("Failed to open file \"%s\"", argv[2]);
+		return 0;
 	}
-	printf("\n\n.....Test ended\n");
+		
+//*************************************************************************************************	
+//******************************************СОРТИРОВКА СТРОК В ОБРАТНОМ ПОРЯДКЕ
+//*************************************************************************************************
+
+#ifndef   JULESIMF_NO_OUTPUT
+	printf("Sorting the poem in direct...\n");
+#endif //!JULESIMF_NO_OUTPUT
+
+#ifdef    JULESIMF_DEBUG
+	FILE* file = fopen(argv[2], "a");
+	fprintf(file, "\n\n\n");
+	fclose(file);
 #endif //!JULESIMF_DEBUG
 
+	
+	qsort((void*)strings, nStrings, sizeof(char*), reverseStringComparator);
 
+	if(write(argv[2], strings, nStrings, "a"))
+	{
+		printf("Failed to open file \"%s\"", argv[2]);
+		return 0;
+	}
+	
+	
+	printf("\n\nExecuted correctly\n");
+	return 0;
+}
+
+
+
+
+
+
+//*************************************************************************************************	
+//*************************************************************************************************	
+//******************************************ОПРЕДЕЛЕНИЕ ФУНКЦИЙ
+//*************************************************************************************************
+//*************************************************************************************************	
+
+
+int write(char const* fileName, char** strings, int nStrings, char const* mode)
+{
+#ifdef    JULESIMF_DEBUG
+	assert(fileName);
+	assert(strings);
+	assert(mode); //Что??
+#endif //!JULESIMF_DEBUG
+	
 #ifndef   JULESIMF_NO_OUTPUT
 	printf("Output file opened\n");
 #endif //!JULESIMF_NO_OUTPUT
 	//Файл с данными
-	FILE* sortedPoem = fopen(argv[2], "w");
-	if (!sortedPoem)
-	{
-		printf("Failed to open file \"%s\"\n", argv[2]);
-		return 0;
-	}
-
+	FILE* file = fopen(fileName, mode);
+	if (!file)
+		return 1;
 
 #ifndef   JULESIMF_NO_OUTPUT
 	printf("Writing output...\n");
 #endif //!JULESIMF_NO_OUTPUT
-	//Поехали выводить сортед поем
+
+	//Поехали выводить
 	for (int i = 0; i != nStrings; i++)
-		fprintf(sortedPoem, "%s\n", strings[i]);
+	{
+#ifdef    JULESIMF_DEBUG
+		assert(strings[i]);
+#endif //!JULESIMF_DEBUG
+		fprintf(file, "%s\n", strings[i]);
+	}
 
 #ifndef   JULESIMF_NO_OUTPUT
 	printf("Output file closed\n");
 #endif //!JULESIMF_NO_OUTPUT
-	fclose(sortedPoem);
-	printf("Executed correctly\n");
+
+	fclose(file);
 	return 0;
 }
-
 
 
 int stringComparator(void const* pFirst, void const* pSecond)
@@ -252,6 +304,10 @@ int stringComparator(void const* pFirst, void const* pSecond)
 		{
 			first++;
 			second++;
+#ifdef    JULESIMF_DEBUG
+			assert(first);
+			assert(second);
+#endif //!JULESIMF_DEBUG
 			continue;
 		}
 		return (int)(*first) - (int)(*second);
@@ -259,6 +315,51 @@ int stringComparator(void const* pFirst, void const* pSecond)
 
 	return (((*first) == (*second)) ? 0 : (int)(*first) - (int)(*second));
 }
+
+int reverseStringComparator(void const* pFirst, void const* pSecond)
+{
+#ifdef    JULESIMF_DEBUG
+	assert(pFirst);
+	assert(pSecond);
+#endif //!JULESIMF_DEBUG
+
+	int L_first = 0;
+	int L_second = 0;
+
+
+	//pFirst и pSecond указывают не на строки, а на указатель на строки
+
+	//А это уже строки
+	char* first = (*(char**)pFirst);
+	char* second = (*(char**)pSecond);
+
+	{
+		char* tmpFirst  = first;
+		char* tmpSecond = second;
+		while (*(tmpFirst++))
+			L_first++;
+
+		while (*(tmpSecond)++)
+			L_second++;
+	}
+
+
+	char cFirst = '\0', cSecond = '\0';
+	
+	int i = 0;
+	for(; i < L_first && i < L_second; i++)
+	{
+		cFirst  = *(first  + L_first  - 1 - i);
+		cSecond = *(second + L_second - 1 - i);
+		if (cFirst == cSecond)
+			continue;
+
+		return cFirst - cSecond;
+	}
+
+	return L_first - L_second;
+}
+
 
 void* translateFileIntoRam(FILE* file, int* pFileSize, int* nStrings)
 {
@@ -272,39 +373,13 @@ void* translateFileIntoRam(FILE* file, int* pFileSize, int* nStrings)
 	fseek(file, 0, SEEK_SET);
 	void* translatedFile = malloc(fileSize + 2); //на всякий случай
 	if (!translatedFile)
-		return NULL;
+		return 0;
 
 	int RETURN_fread = fread(translatedFile, 1, fileSize, file);
 	((char*)translatedFile)[RETURN_fread] = '\0'; //По новой спецификации функции (чисто поржать)
 	fseek(file, 0, SEEK_SET);
 
 
-	/*if (RETURN_fread != fileSize)
-		return NULL;*/
-
-
-#ifdef    JULESIMF_DEBUG
-	printf(".....Translated file:\n");
-	char* fileChars = (char*)translatedFile;
-	for (int i = 0; i != RETURN_fread; i++)
-	{
-		if (!fileChars[i])
-		{
-			printf("\\0");
-			continue;
-		}
-		if (fileChars[i] == '\n')
-		{
-			printf("\\n");
-			continue;
-		}
-		putchar(fileChars[i]);
-	}
-	putchar('\n');
-	printf(".....Translated file end\n\n");
-	printf("filesize = %d\nfread = %d\ndelta = %d\n\n", 
-		   fileSize, RETURN_fread, fileSize - RETURN_fread);
-#endif //!JULESIMF_DEBUG
 	*nStrings  = 1 + fileSize - RETURN_fread;
 	*pFileSize = RETURN_fread;
 	return translatedFile;
@@ -320,7 +395,7 @@ int separateStrings(void* source, int fileSize, char** destination,
 
 	char* text          = (char*)source;
 	int   iDestination  = 0; //Итератор для destination
-	char* currentString = NULL;
+	char* currentString = 0;
 
 	for (int iText = 0; iText != fileSize + 1; iText++)
 	{
@@ -335,8 +410,9 @@ int separateStrings(void* source, int fileSize, char** destination,
 		if (text[iText] == '\n' || !text[iText])
 		{
 			text[iText] = '\0';
-			destination[iDestination++] = currentString;
-			currentString = NULL;
+			destination      [iDestination] = currentString;
+			iDestination++;
+			currentString = 0;
 		}
 	}
 
