@@ -14,7 +14,7 @@ Edit Notes:
 	2) Добавлены reverseStringComparator, write	
 */
 
-#define JULESIMF_DEBUG
+//#define JULESIMF_DEBUG
 //#define JULESIMF_NO_OUTPUT
 
 ///Из-за специфики VS необходимо объявить следующий макрос
