@@ -199,12 +199,6 @@ int main(int argc, char const** argv)
 
 	struct string_view* originalStrings = (struct string_view*)calloc(nStrings, sizeof(struct string_view)); //А здесь сам массив
 
-	//SEPARATE
-	for (int i = 0; i != nStrings; i++)
-	{
-		printf("%d: (%p)\t(%d)\t(%s)\n", i, &strings[i], strings[i].size, strings[i].string);
-	}
-
 
 #ifndef   JULESIMF_DEBUG
 	assert(originalStrings);
