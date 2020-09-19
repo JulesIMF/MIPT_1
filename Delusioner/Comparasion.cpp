@@ -3,15 +3,15 @@ Copyright (c) 2020  MIPT
 Name:
 	Comparasion
 Abstract:
-	Реализует функции сравнения строк
+	Р РµР°Р»РёР·СѓРµС‚ С„СѓРЅРєС†РёРё СЃСЂР°РІРЅРµРЅРёСЏ СЃС‚СЂРѕРє
 Author:
 	JulesIMF
 Last Edit:
 	19.09.2020 0:28
 Edit Notes:
-	1) Убран прямой компаратор
-	2) Функция isVovel
-	3) Обратный компаратор проверяет количество слогов
+	1) РЈР±СЂР°РЅ РїСЂСЏРјРѕР№ РєРѕРјРїР°СЂР°С‚РѕСЂ
+	2) Р¤СѓРЅРєС†РёСЏ isVovel
+	3) РћР±СЂР°С‚РЅС‹Р№ РєРѕРјРїР°СЂР°С‚РѕСЂ РїСЂРѕРІРµСЂСЏРµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃР»РѕРіРѕРІ
 */
 
 #include <stdio.h>
@@ -35,7 +35,7 @@ int reverseStringComparator(void const* pFirst, void const* pSecond)
 	Line* stringFirst  = (Line*)pFirst;
 	Line* stringSecond = (Line*)pSecond;
 
-	//Строки должны быть отсортированы в первую очередь по количеству слогов
+	//РЎС‚СЂРѕРєРё РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅС‹ РІ РїРµСЂРІСѓСЋ РѕС‡РµСЂРµРґСЊ РїРѕ РєРѕР»РёС‡РµСЃС‚РІСѓ СЃР»РѕРіРѕРІ
 	{
 		int syllablesDelta =
 			stringFirst->nSyllables - stringSecond->nSyllables;
@@ -43,7 +43,7 @@ int reverseStringComparator(void const* pFirst, void const* pSecond)
 			return syllablesDelta;
 	}
 
-	//А это уже строки
+	//Рђ СЌС‚Рѕ СѓР¶Рµ СЃС‚СЂРѕРєРё
 	char* first  = stringFirst ->string;
 	char* second = stringSecond->string;
 	int L_first  = stringFirst ->size;
@@ -85,9 +85,9 @@ int reverseStringComparator(void const* pFirst, void const* pSecond)
 int isAllowedChar(char c)
 {
 	
-	if ('А' <= c && c <= 'Я')
+	if ('Рђ' <= c && c <= 'РЇ')
 		return 1;
-	if ('а' <= c && c <= 'я')
+	if ('Р°' <= c && c <= 'СЏ')
 		return 1;
 	if (c < 0)
 		return 0;
@@ -101,10 +101,10 @@ int isVowel(char c)
 {
 	static char vowels[] =
 	{
-		'а', 'о', 'у', 'э', 'ы',
-		'я', 'ё', 'ю', 'е', 'и',
-		'А', 'О', 'У', 'Э', 'Ы',
-		'Я', 'Ё', 'Ю', 'Е', 'И'
+		'Р°', 'Рѕ', 'Сѓ', 'СЌ', 'С‹',
+		'СЏ', 'С‘', 'СЋ', 'Рµ', 'Рё',
+		'Рђ', 'Рћ', 'РЈ', 'Р­', 'Р«',
+		'РЇ', 'РЃ', 'Р®', 'Р•', 'Р'
 	};
 
 	for (int i = 0; i != sizeof(vowels); i++)
