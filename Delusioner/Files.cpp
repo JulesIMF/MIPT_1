@@ -58,6 +58,7 @@ int write(char const* fileName, Line* strings, int nStrings, char const* mode)
 #endif //!JULESIMF_DEBUG
 		if (!(i & 3) && i)
 			fprintf(file, "\n");
+
 		fprintf(file, "%s\n", strings[i].string);
 	}
 
@@ -170,6 +171,7 @@ void* translateFileIntoRam(char const* fileName, int* pFileSize, int* nStrings)
 	}
 	*nStrings = nNewLines + 1;
 	*pFileSize = RETURN_fread;
+	 
 #ifndef   JULESIMF_NO_OUTPUT
 	printf("Input file closed\n");
 #endif //!JULESIMF_NO_OUTPUT

@@ -7,9 +7,9 @@ Abstract:
 Author:
 	JulesIMF
 Last Edit:
-	19.09.2020 0:27
+	19.09.2020 14:59
 Edit Notes:
-	1) Создана 
+	1) compareLastWords
 */
 #include <stdlib.h>
 #include <assert.h>

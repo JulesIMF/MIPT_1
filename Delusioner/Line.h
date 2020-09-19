@@ -10,6 +10,3 @@ typedef struct string_view_
 	int size;
 } Line;
 #endif // !JULESIMF_LINE_INCLUDED
-
-
-

@@ -7,9 +7,10 @@ Abstract:
 Author:
 	JulesIMF
 Last Edit:
-	19.09.2020 0:30
+	19.09.2020 15:01
 Edit Notes:
-	1) Реализован бредогенератор
+	1) Теперь нет строк с одинаковыми словами в конце
+	2) Исправлен баг с переводом строки в именах файлов
 */
 
 //#define JULESIMF_DEBUG
@@ -188,7 +189,7 @@ int main(int argc, char const** argv)
 		free((void*)outputFileName);
 	}
 #ifndef JULESIMF_NO_OUTPUT
-	printf("\n\n");
+	printf("\n\n"); //только если до этого все подряд выводилось
 #endif // !JULESIMF_NO_OUTPUT
 
 	printf("Executed correctly\n");
