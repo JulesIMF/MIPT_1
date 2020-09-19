@@ -3,19 +3,19 @@ Copyright (c) 2020  MIPT
 Name:
 	Files
 Abstract:
-	Реализует функции работы с файлами
+	Р РµР°Р»РёР·СѓРµС‚ С„СѓРЅРєС†РёРё СЂР°Р±РѕС‚С‹ СЃ С„Р°Р№Р»Р°РјРё
 Author:
 	JulesIMF
 Last Edit:
 	19.09.2020 15:02
 Edit Notes:
-	1) Подсчет числа слогов в separateStrings
-	2) write выводит строфами
+	1) РџРѕРґСЃС‡РµС‚ С‡РёСЃР»Р° СЃР»РѕРіРѕРІ РІ separateStrings
+	2) write РІС‹РІРѕРґРёС‚ СЃС‚СЂРѕС„Р°РјРё
 
 	3) replaceNewLine
 */
 
-///Из-за специфики VS необходимо объявить следующий макрос
+///РР·-Р·Р° СЃРїРµС†РёС„РёРєРё VS РЅРµРѕР±С…РѕРґРёРјРѕ РѕР±СЉСЏРІРёС‚СЊ СЃР»РµРґСѓСЋС‰РёР№ РјР°РєСЂРѕСЃ
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
@@ -35,13 +35,13 @@ int write(char const* fileName, Line* strings, int nStrings, char const* mode)
 #ifdef    JULESIMF_DEBUG
 	assert(fileName);
 	assert(strings);
-	assert(mode); //Что??
+	assert(mode); //Р§С‚Рѕ??
 #endif //!JULESIMF_DEBUG
 
 #ifndef   JULESIMF_NO_OUTPUT
 	printf("Output file opened\n");
 #endif //!JULESIMF_NO_OUTPUT
-	//Файл с данными
+	//Р¤Р°Р№Р» СЃ РґР°РЅРЅС‹РјРё
 	FILE* file = fopen(fileName, mode);
 	if (!file)
 		return 1;
@@ -50,7 +50,7 @@ int write(char const* fileName, Line* strings, int nStrings, char const* mode)
 	printf("Writing output...\n");
 #endif //!JULESIMF_NO_OUTPUT
 
-	//Поехали выводить
+	//РџРѕРµС…Р°Р»Рё РІС‹РІРѕРґРёС‚СЊ
 	for (int i = 0; i != nStrings; i++)
 	{
 #ifdef    JULESIMF_DEBUG
@@ -79,18 +79,18 @@ int separateStrings(void* source, int fileSize, Line* destination, int nStrings)
 #endif //!JULESIMF_DEBUG
 
 	char* text = (char*)source;
-	int   iDestination = 0; //Итератор для destination
+	int   iDestination = 0; //РС‚РµСЂР°С‚РѕСЂ РґР»СЏ destination
 	char* currentString = 0;
 	int   currentStringLength = 0;
 	int nSyllables = 0;
 
 	for (int iText = 0; iText != fileSize + 1; iText++)
 	{
-		//Если iDestinаtion слишком большой, то JOPA
+		//Р•СЃР»Рё iDestinР°tion СЃР»РёС€РєРѕРј Р±РѕР»СЊС€РѕР№, С‚Рѕ JOPA
 		if (iDestination >= nStrings)
 			return 1;
 
-		//Это если мы в прошлый раз запихнули строку
+		//Р­С‚Рѕ РµСЃР»Рё РјС‹ РІ РїСЂРѕС€Р»С‹Р№ СЂР°Р· Р·Р°РїРёС…РЅСѓР»Рё СЃС‚СЂРѕРєСѓ
 		if (!currentString)
 			currentString = text + iText;
 
@@ -135,7 +135,7 @@ int getFileSize(FILE* file)
 
 void* translateFileIntoRam(char const* fileName, int* pFileSize, int* nStrings)
 {
-	//Файл с данными
+	//Р¤Р°Р№Р» СЃ РґР°РЅРЅС‹РјРё
 	FILE* file = fopen(fileName, "r");
 	if (!file)
 	{
@@ -155,12 +155,12 @@ void* translateFileIntoRam(char const* fileName, int* pFileSize, int* nStrings)
 	assert(nStrings);
 #endif //!JULESIMF_DEBUG
 	int fileSize = getFileSize(file);
-	void* translatedFile = malloc(fileSize + 2); //на всякий случай
+	void* translatedFile = malloc(fileSize + 2); //РЅР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№
 	if (!translatedFile)
 		return 0;
 
 	int RETURN_fread = fread(translatedFile, 1, fileSize, file);
-	((char*)translatedFile)[RETURN_fread] = '\0'; //По новой спецификации функции (чисто поржать)
+	((char*)translatedFile)[RETURN_fread] = '\0'; //РџРѕ РЅРѕРІРѕР№ СЃРїРµС†РёС„РёРєР°С†РёРё С„СѓРЅРєС†РёРё (С‡РёСЃС‚Рѕ РїРѕСЂР¶Р°С‚СЊ)
 	fseek(file, 0, SEEK_SET);
 
 	int nNewLines = 0;
