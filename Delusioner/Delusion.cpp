@@ -3,7 +3,7 @@ Copyright (c) 2020  MIPT
 Name:
 	Delusion
 Abstract:
-	Реализует функцию бредогенерации
+	Р РµР°Р»РёР·СѓРµС‚ С„СѓРЅРєС†РёСЋ Р±СЂРµРґРѕРіРµРЅРµСЂР°С†РёРё
 Author:
 	JulesIMF
 Last Edit:
@@ -25,13 +25,13 @@ Edit Notes:
 
 
 /**
- * Проверяет на совпадение последних слов.
+ * РџСЂРѕРІРµСЂСЏРµС‚ РЅР° СЃРѕРІРїР°РґРµРЅРёРµ РїРѕСЃР»РµРґРЅРёС… СЃР»РѕРІ.
  * 
- * \param first первая строчка
- * \param second вторая строчка
- * \param iFirst указатель на ПОСЛЕДНЮЮ БУКВУ ПОСЛЕДНЕГО СЛОВА first
- * \param iSecond указатель на ПОСЛЕДНЮЮ БУКВУ ПОСЛЕДНЕГО СЛОВА second
- * \return 1 если они совпадают, 0 иначе
+ * \param first РїРµСЂРІР°СЏ СЃС‚СЂРѕС‡РєР°
+ * \param second РІС‚РѕСЂР°СЏ СЃС‚СЂРѕС‡РєР°
+ * \param iFirst СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РџРћРЎР›Р•Р”РќР®Р® Р‘РЈРљР’РЈ РџРћРЎР›Р•Р”РќР•Р“Рћ РЎР›РћР’Рђ first
+ * \param iSecond СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РџРћРЎР›Р•Р”РќР®Р® Р‘РЈРљР’РЈ РџРћРЎР›Р•Р”РќР•Р“Рћ РЎР›РћР’Рђ second
+ * \return 1 РµСЃР»Рё РѕРЅРё СЃРѕРІРїР°РґР°СЋС‚, 0 РёРЅР°С‡Рµ
  */
 static int compareLastWords(char const* first, char const* second, int iFirst, int iSecond)
 {
@@ -50,7 +50,7 @@ static int compareLastWords(char const* first, char const* second, int iFirst, i
 
 int isRhyme(Line first, Line second)
 {
-	//Строки с разным количеством слогов уходят
+	//РЎС‚СЂРѕРєРё СЃ СЂР°Р·РЅС‹Рј РєРѕР»РёС‡РµСЃС‚РІРѕРј СЃР»РѕРіРѕРІ СѓС…РѕРґСЏС‚
 	if (first.nSyllables != second.nSyllables)
 		return 0;
 
@@ -60,7 +60,7 @@ int isRhyme(Line first, Line second)
 	char const* sSecond = second.string;
 
 
-	//Переведем указатель на начало БУКВ
+	//РџРµСЂРµРІРµРґРµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РЅР°С‡Р°Р»Рѕ Р‘РЈРљР’
 	do {
 		iFirst--;
 	} while (iFirst >= 0 && !isAllowedChar(sFirst[iFirst]));
@@ -69,31 +69,31 @@ int isRhyme(Line first, Line second)
 		iSecond--;
 	} while (iSecond >= 0 && !isAllowedChar(sSecond[iSecond]));
 
-	//Если строки оканчиваются неодинаковой буквой, они уходят
+	//Р•СЃР»Рё СЃС‚СЂРѕРєРё РѕРєР°РЅС‡РёРІР°СЋС‚СЃСЏ РЅРµРѕРґРёРЅР°РєРѕРІРѕР№ Р±СѓРєРІРѕР№, РѕРЅРё СѓС…РѕРґСЏС‚
 	if (sFirst[iFirst] != sSecond[iSecond])
 		return 0;
 
-	//Если последние слова одинаковы, это неинтересно
+	//Р•СЃР»Рё РїРѕСЃР»РµРґРЅРёРµ СЃР»РѕРІР° РѕРґРёРЅР°РєРѕРІС‹, СЌС‚Рѕ РЅРµРёРЅС‚РµСЂРµСЃРЅРѕ
 	if (compareLastWords(sFirst, sSecond, iFirst, iSecond))
 		return 0;
 
-	//Строчки без букв
+	//РЎС‚СЂРѕС‡РєРё Р±РµР· Р±СѓРєРІ
 	if (iFirst < 0 || iSecond < 0)
 		return 0;
 
-	//Если последние буквы - гласные, то надо декрементировать итераторы
+	//Р•СЃР»Рё РїРѕСЃР»РµРґРЅРёРµ Р±СѓРєРІС‹ - РіР»Р°СЃРЅС‹Рµ, С‚Рѕ РЅР°РґРѕ РґРµРєСЂРµРјРµРЅС‚РёСЂРѕРІР°С‚СЊ РёС‚РµСЂР°С‚РѕСЂС‹
 	if (isVowel(sFirst[iFirst]) && isVowel(sSecond[iSecond]))
 		iFirst--, iSecond--;
 
-	//Идем до первой гласной
+	//РРґРµРј РґРѕ РїРµСЂРІРѕР№ РіР»Р°СЃРЅРѕР№
 	while (iFirst >= 0 && iSecond >= 0 &&
 		!isVowel(sFirst[iFirst]) && !isVowel(sSecond[iSecond]))
 	{
-		//Несовпадение? Капец, return 0
+		//РќРµСЃРѕРІРїР°РґРµРЅРёРµ? РљР°РїРµС†, return 0
 		if (sFirst[iFirst] != sSecond[iSecond])
 			return 0;
 
-		//Пропускаем все лишнее
+		//РџСЂРѕРїСѓСЃРєР°РµРј РІСЃРµ Р»РёС€РЅРµРµ
 		do {
 			iFirst--;
 		} while (iFirst >=0 && !isAllowedChar(sFirst[iFirst]));
@@ -103,7 +103,7 @@ int isRhyme(Line first, Line second)
 		} while (iSecond >= 0 && !isAllowedChar(sSecond[iSecond]));
 	}
 
-	//1 только если есть гласные и последние совпадают
+	//1 С‚РѕР»СЊРєРѕ РµСЃР»Рё РµСЃС‚СЊ РіР»Р°СЃРЅС‹Рµ Рё РїРѕСЃР»РµРґРЅРёРµ СЃРѕРІРїР°РґР°СЋС‚
 	return (iFirst >= 0) && (iSecond >= 0) &&
 		isVowel(sFirst[iFirst]) &&
 		isVowel(sSecond[iSecond]) == isVowel(sFirst[iFirst]);
@@ -113,10 +113,10 @@ int isRhyme(Line first, Line second)
 /**
  * .
  *
- * \param nLines количество запрашиваемых строк (округляется до 4)
- * \param source исходные строки
+ * \param nLines РєРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїСЂР°С€РёРІР°РµРјС‹С… СЃС‚СЂРѕРє (РѕРєСЂСѓРіР»СЏРµС‚СЃСЏ РґРѕ 4)
+ * \param source РёСЃС…РѕРґРЅС‹Рµ СЃС‚СЂРѕРєРё
  * \param sourceSize
- * \return указатель на бред
+ * \return СѓРєР°Р·Р°С‚РµР»СЊ РЅР° Р±СЂРµРґ
  */
 Line* generateDelusion(unsigned int nLines, Line const* source, size_t const sourceSize)
 {
