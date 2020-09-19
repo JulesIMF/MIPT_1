@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright (c) 2020  MIPT
 Name:
 	Бредогенератор
@@ -7,10 +7,11 @@ Abstract:
 Author:
 	JulesIMF
 Last Edit:
-	19.09.2020 15:01
+	19.09.2020 15:26
 Edit Notes:
 	1) Теперь нет строк с одинаковыми словами в конце
 	2) Исправлен баг с переводом строки в именах файлов
+	3) Исправлен баг с fflush(stdin) - замена на stdinFlush()
 */
 
 //#define JULESIMF_DEBUG
@@ -32,6 +33,8 @@ Edit Notes:
 #include "Common.h"
 #include "Delusion.h"
 
+#define FILENAME_MAX_LENGTH 256
+#define stdinFlush() while (getchar() != '\n');
 
 //*************************************************************************************************	
 //*************************************************************************************************	
@@ -68,18 +71,18 @@ int main(int argc, char const** argv)
 
 	case 1:
 	{
-		char* _input = (char*)calloc(256, sizeof(char));
-		char* _output = (char*)calloc(256, sizeof(char));
+		char* _input = (char*)calloc(FILENAME_MAX_LENGTH, sizeof(char));
+		char* _output = (char*)calloc(FILENAME_MAX_LENGTH, sizeof(char));
 
 		if (_input == 0 || _output == 0)
 			jerror("Unknown calloc error");
 
 		printf("Enter input file name: ");
-		fgets(_input, 256, stdin);
+		fgets(_input, FILENAME_MAX_LENGTH, stdin);
 		fflush(stdin);
 
 		printf("Enter output file name: ");
-		fgets(_output, 256, stdin);
+		fgets(_output, FILENAME_MAX_LENGTH, stdin);
 		fflush(stdin);
 
 		replaceNewLine(_input);
@@ -163,9 +166,11 @@ int main(int argc, char const** argv)
 	printf("Enter number of lines in a delusion: ");
 	while (!scanf("%d", &nLinesInPoem))
 	{
-		fflush(stdin);
 		printf("Wrong format, enter once again: ");
+
+		stdinFlush();
 	}
+	stdinFlush();
 
 	Line* delusion = generateDelusion(nLinesInPoem, strings, nStrings);
 
