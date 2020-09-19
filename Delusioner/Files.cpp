@@ -189,3 +189,4 @@ void replaceNewLine(char* line)
 			return;
 		}
 }
+
