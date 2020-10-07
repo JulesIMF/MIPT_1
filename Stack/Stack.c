@@ -1,3 +1,7 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 /*
 Copyright (c) 2020  MIPT
 Module Name:
@@ -225,6 +229,8 @@ static Stack* allocateStack(size_t capacity)
         free(stack);
         return NULL;
     }
+
+    return stack;
 }
 
 
@@ -470,6 +476,8 @@ StackStatus stackRescue(Stack* stack)
     STATIC_VALUES();
 
 #ifdef _STACK_DUPLICATE
+    if (stack->duplicate == NULL)
+        return STACK_RESCUE_ERROR;
     Stack* backup = stack->duplicate - duplicateOffset;
     backup->duplicate = makeStackDuplicate(backup) + duplicateOffset;
     if (stackIsValid(backup) == STACK_INVALID)
