@@ -37,7 +37,6 @@ stackDelete(STACK->duplicate - duplicateOffset);\
 STACK->duplicate = COPY;
 
 //Макрос для возврата STACK_INVALID
-
 #define CHECK(EXPRESSION)\
 if(EXPRESSION){\
 if(_STACK_PRINT_MESSAGES)\
@@ -57,9 +56,9 @@ return STACK_INVALID;\
 
 
 
-static unsigned long long frontCanary	= 0, backCanary = 0, poison = 0;
-static int const maxAbsOffset			= 10;
-static int duplicateOffset				= 0;
+static unsigned long long frontCanary   = 0, backCanary = 0, poison = 0;
+static int const maxAbsOffset           = 10;
+static int duplicateOffset              = 0;
 
 /**
  * Генерирует системные значения.
@@ -184,27 +183,21 @@ StackStatus stackIsValid(Stack* stack)
 #ifdef _STACK_DUPLICATE
     Stack* duplicate = stack->duplicate;
     
-    if (duplicate)
-    {
-        duplicate -= duplicateOffset;
-        CHECK(
-            duplicate->capacity != stack->capacity ||
-            duplicate->size != stack->size ||
-            duplicate->hash != stack->hash ||
-            duplicate->data == NULL ||
-            duplicate->duplicate
-        );
+    CHECK(duplicate == NULL);
+    duplicate -= duplicateOffset;
+    CHECK(
+        duplicate->capacity != stack->capacity ||
+        duplicate->size     != stack->size ||
+        duplicate->hash     != stack->hash ||
+        duplicate->data     == NULL ||
+        duplicate->duplicate
+    );
 
-        unsigned long long* _data = duplicate->data;
-        data = stack->data;
+    unsigned long long* _data = duplicate->data;
+    data = stack->data;
 
-        for (int i = 0; i != realCapacity; i++)
-        {
-            CHECK(*(data++) != *(_data++));
-        }
-    }
-    else
-        CHECK(duplicate == NULL);
+    for (int i = 0; i != realCapacity; i++)
+        CHECK(*(data++) != *(_data++));
 #endif
 
 
