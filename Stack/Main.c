@@ -5,6 +5,8 @@
 #include <string.h>
 #include "Stack.h"
 
+#define STRUCT_REVEAL
+
 void printStatus(StackStatus s)
 {
 	switch (s)
@@ -38,12 +40,25 @@ void printStatus(StackStatus s)
 	}
 }
 
+#ifdef STRUCT_REVEAL
+struct Stack__
+{
+	unsigned long long* data;
+	size_t capacity;
+	size_t size;
+	unsigned long long hash;
+	struct Stack__* duplicate;
+	unsigned long long structHash;
+};
+#endif
+
 int main(void)
 {
 	int size = 0;
 	scanf("%d", &size);
 	assert(size > 0);
-	Stack* st = stackNew(size);
+	Stack* st;
+	st = stackNew(size);
 	assert(st);
 	char req[10] = "";
 	long long value = 0;
@@ -105,22 +120,6 @@ int main(void)
 			continue;
 		}
 
-		if (!strcmp("hack", req))
-		{
-			int i = 0;
-			printf("i\tvalue\n");
-			scanf("%d%lld", &i, &value);
-			st->data[i] = value;
-			continue;
-		}
-
-		if (!strcmp("call", req))
-		{
-			scanf("%p", foo);
-			foo();
-			continue;
-		}
-
 		if (!strcmp("delete", req))
 		{
 			stackDelete(st);
@@ -140,13 +139,57 @@ int main(void)
 			st = copy;
 			continue;
 		}
-
-		if (!strcmp("duplbrk", req))
+	#ifdef STRUCT_REVEAL
+		if (!strcmp("hack", req))
 		{
-			st->duplicate = NULL;
+			int i = 0;
+			printf("i\tvalue\n");
+			scanf("%d%lld", &i, &value);
+			st->data[i] = value;
 			continue;
 		}
 
+		if (!strcmp("strhack", req))
+		{
+			/*
+			unsigned long long* data;
+			size_t capacity;
+			size_t size;
+			unsigned long long hash;
+			struct Stack__* duplicate;
+			unsigned long long structHash;
+			*/
+			printf("field\tvalue\n");
+			int field = 0;
+			scanf("%d%lld", &field, &value);
+			switch (field)
+			{
+			case 1:
+				st->data = (unsigned long long*)value;
+				continue;
+			case 2:
+				st->capacity = value;
+				continue;
+			case 3:
+				st->size = value;
+				continue;
+			case 4:
+				st->hash = value;
+				continue;
+			case 5:
+				st->duplicate = (Stack*)value;
+				continue;
+			case 6:
+				st->structHash = value;
+				continue;
+			default:
+				;
+			}
+		}
+	#endif
+
 		printf("unknown req\n");
 	}
+
+	stackDelete(st);
 }
