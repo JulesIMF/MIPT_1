@@ -31,7 +31,7 @@ void printStatus(StackStatus s)
 		printf("STACK_RESIZE_ERROR\n");
 		return;
 	case STACK_RESCUE_ERROR:
-		printf("STACK_RESIZE_ERROR\n");
+		printf("STACK_RESCUE_ERROR\n");
 		return;
 	default:
 		printf("DEFAULT\n");
@@ -49,35 +49,39 @@ int main(void)
 	long long value = 0;
 	size_t nValue = 0;
 
-	void (*foo)(void);
-	foo = NULL;
+	void (*foo)(void) = NULL;
 
 	while(1)
 	{
 		scanf("%9s", req);
+
 		if (!strcmp("resize", req))
 		{
 			scanf("%d", &nValue);
 			printStatus(stackResize(st, nValue));
 			continue;
 		}
+
 		if (!strcmp("isvalid", req))
 		{
 			printStatus(stackIsValid(st));
 			continue;
 		}
+
 		if (!strcmp("push", req))
 		{
 			scanf("%lld", &value);
 			printStatus(stackPush(st, value));
 			continue;
 		}
+
 		if (!strcmp("pop", req))
 		{
 			
 			printStatus(stackPop(st));
 			continue;
 		}
+
 		if (!strcmp("size", req))
 		{
 			
@@ -91,6 +95,13 @@ int main(void)
 			
 			printStatus(stackTop(st, &value));
 			printf("\t%lld\n", value);
+			continue;
+		}
+
+		if (!strcmp("clear", req))
+		{
+
+			printStatus(stackClear(st));
 			continue;
 		}
 
@@ -109,7 +120,6 @@ int main(void)
 			foo();
 			continue;
 		}
-
 
 		if (!strcmp("delete", req))
 		{
@@ -134,6 +144,7 @@ int main(void)
 		if (!strcmp("duplbrk", req))
 		{
 			st->duplicate = NULL;
+			continue;
 		}
 
 		printf("unknown req\n");
