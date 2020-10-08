@@ -48,6 +48,7 @@ StackStatus     stackPush       (Stack* stack, unsigned long long value);
 StackStatus     stackPop        (Stack* stack);
 StackStatus     stackSize       (Stack* stack, size_t* value);
 StackStatus     stackTop        (Stack* stack, unsigned long long* value);
+StackStatus     stackClear      (Stack* stack);
 StackStatus     stackResize     (Stack* stack, size_t capacity);
 Stack*          stackCopy       (Stack* stack);
 StackStatus     stackRescue     (Stack* stack);
