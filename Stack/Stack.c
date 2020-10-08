@@ -28,20 +28,22 @@ Edit Notes:
 #pragma intrinsic(_ReturnAddress)
 
 //Макрос для создания копии
-#define DUPLICATE(STACK, COPY)\
-Stack* COPY = makeStackDuplicate(STACK);\
-if (COPY == NULL)\
-return STACK_DUPLICATION_ERROR;\
-COPY += duplicateOffset;\
-stackDelete(STACK->duplicate - duplicateOffset);\
+#define DUPLICATE(STACK, COPY)                                  \
+Stack* COPY = makeStackDuplicate(STACK);                        \
+if (COPY == NULL)                                               \
+    return STACK_DUPLICATION_ERROR;                             \
+COPY += duplicateOffset;                                        \
+stackDelete(STACK->duplicate - duplicateOffset);                \
 STACK->duplicate = COPY;
 
 //Макрос для возврата STACK_INVALID
-#define CHECK(EXPRESSION)\
-if(EXPRESSION){\
-if(_STACK_PRINT_MESSAGES)\
-printf("Check failed in %s: \"%s\", line %d\n", __FUNCTION__, #EXPRESSION, __LINE__);\
-return STACK_INVALID;\
+#define CHECK(EXPRESSION)                                       \
+if(EXPRESSION)                                                  \
+{                                                               \
+    if(_STACK_PRINT_MESSAGES)                                   \
+        printf("Check failed in %s: \"%s\", line %d\n",         \
+               __FUNCTION__, #EXPRESSION, __LINE__);            \
+    return STACK_INVALID;                                       \
 }
 
 #define STATIC_VALUES() if(!frontCanary) { if(!strcmp(__FUNCTION__, "stackNew")) generateValues(); else return STACK_INVALID; }
@@ -428,6 +430,43 @@ StackStatus stackTop(Stack* stack, unsigned long long* value)
         return STACK_UNDERFLOW;
 
     *value = stack->data[stack->size];
+
+#ifdef _STACK_DEEP_VALIDATION
+    return stackIsValid(stack);
+#endif // _STACK_DEEP_VALIDATION
+    return STACK_OK;
+}
+
+StackStatus stackClear(Stack* stack)
+{
+    /*
+        ЭТОТ БЛОК НЕЛЬЗЯ МЕНЯТЬ, Т К ЭТО ПРИВЕДЕТ К ИНВАЛИДАЦИИ ТАБЛИЦЫ СМЕЩЕНИЙ
+
+        НАЧАЛО БЛОКА
+    */
+    if (stack == NULL)
+        return STACK_NULL;
+
+    STATIC_VALUES();
+    CHECK(stackIsValid(stack) != STACK_OK);
+
+    stack->data[1] = backCanary;
+    unsigned long long* data = stack->data + 2;
+    size_t capacity = stack->capacity;
+    for (int i = 0; i != capacity; i++)
+        *(data++) = poison;
+    
+    stack->size = 0;
+    /*
+        ЭТОТ БЛОК НЕЛЬЗЯ МЕНЯТЬ, Т К ЭТО ПРИВЕДЕТ К ИНВАЛИДАЦИИ ТАБЛИЦЫ СМЕЩЕНИЙ
+
+        КОНЕЦ БЛОКА
+    */
+    stack->hash = getHash(stack);
+
+#ifdef _STACK_DUPLICATE
+    DUPLICATE(stack, duplicate);
+#endif
 
 #ifdef _STACK_DEEP_VALIDATION
     return stackIsValid(stack);
