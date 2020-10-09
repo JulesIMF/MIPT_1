@@ -190,3 +190,30 @@ void replaceNewLine(char* line)
 		}
 }
 
+typedef struct
+{
+    Line* lines;
+    void* buffer;
+    size_t size;
+} LinesArray;
+
+
+void deleteLinesArray(LinesArray linesArray)
+{
+    free(linesArray.buffer);
+    free(linesArray.lines);
+}
+
+LinesArray getLinesArray(char const* fileName)
+{
+    LinesArray linesArray = { NULL, NULL, 0 };
+    size_t fileSize = 0;
+    char* buffer = (char*)translateFileIntoRam(fileName, &fileSize, &(linesArray.size));
+    assert(buffer);
+    assert(fileSize);
+    linesArray.buffer = (void*)buffer;
+    linesArray.lines = (Line*)calloc(linesArray.size, sizeof(Line));
+    assert(linesArray.lines);
+    assert(!separateStrings((void*)buffer, fileSize, linesArray.lines, linesArray.size));
+    return linesArray;
+}
