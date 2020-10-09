@@ -12,7 +12,7 @@ Abstract:
 Author:
     JulesIMF
 Last Edit:
-    09.10.2020
+    09.10.2020 2:16
 Edit Notes:
     1) Хеширование структуры
     2) stackCapacity
@@ -161,11 +161,12 @@ static unsigned long long _getStructHash(Stack* stack)
 
     //Ужас конечно
     return 
-        _getHash(&(stack->capacity),     sizeof(stack->capacity)) + 
-        _getHash(&(stack->data),         sizeof(stack->capacity)) + 
-        _getHash(&(stack->size),         sizeof(stack->capacity)) + 
-        _getHash(&(stack->duplicate),    sizeof(stack->capacity)) + 
-        _getHash(&(stack->hash),         sizeof(stack->capacity));
+        _getHash(&(stack->capacity),     sizeof(stack->capacity))   + 
+        _getHash(&(stack->data),         sizeof(stack->data))       + 
+        _getHash(&(stack->size),         sizeof(stack->size))       + 
+        _getHash(&(stack->duplicate),    sizeof(stack->duplicate))  + 
+        _getHash(&(stack->hash),         sizeof(stack->hash));
+
 
 }
 #endif
